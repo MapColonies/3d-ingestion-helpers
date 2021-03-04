@@ -1,46 +1,63 @@
 openapi: 3.0.1
 info:
-  title: service-name
-  description: basic template for map colonies service
+  title: 3d ingestion helpers
+  description: External tools invocation to assist during 3d models upload
   version: 1.0.0
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
 servers:
-  - url: http://localhost:8080
+  - url: http://localhost:8084
 paths:
-  /resourceName:
+  /validations/{flowId}:
     get:
-      operationId: getResourceName
+      operationId: getValidation
+      summary: Get validation results
       tags:
-        - resourceName
-      summary: gets the resource
+        - validations
+      parameters:
+        - $ref: '#/components/parameters/flowId'
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/resource'
-    post:
-      operationId: createResource
-      tags:
-        - resourceName
-      summary: creates a new record of type resource
-      responses:
-        201:
-          description: created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/resource'
+                $ref: '#/components/schemas/validation'
         400:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/error'
+          $ref: '#/components/responses/badRequest'
+        '5XX':
+          $ref: '#/components/responses/unexpectedError'
 components:
+  parameters:
+    flowId:
+      in: path
+      name: flowId
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: The flow id
+      example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+  responses:
+    badRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
+    notFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
+    unexpectedError:
+      description: Unexpected Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error'
   schemas:
     error:
       type: object
@@ -49,17 +66,10 @@ components:
       properties:
         message:
           type: string
-    resource:
+    validation:
       type: object
       required:
-        - id
-        - name
-        - description
+        - status
       properties:
-        id:
-          type: number
-          format: int64
-        name:
-          type: string
-        description:
+        status:
           type: string
