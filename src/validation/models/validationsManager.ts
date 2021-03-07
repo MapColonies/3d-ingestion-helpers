@@ -8,7 +8,7 @@ export class ValidationsManager {
   public constructor(@inject(Services.LOGGER) private readonly logger: ILogger) {}
 
   public async getValidation(flowId: string): Promise<Validation | undefined> {
-    this.logger.log('info', `Get validation ${flowId}`);
+    this.logger.log('info', `Get validations for flow id ${flowId}`);
     return Math.random() < 0.5 ? { status: 'valid' } : { status: 'invalid' };
   }
 }
