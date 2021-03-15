@@ -6,7 +6,7 @@ const validationsRouterFactory: FactoryFunction<Router> = (dependencyContainer) 
   const router = Router();
   const controller = dependencyContainer.resolve(ValidationsController);
 
-  router.get('/:flowId', controller.getValidation);
+  router.post('/', controller.post);
 
   return router;
 };

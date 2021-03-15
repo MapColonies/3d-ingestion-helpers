@@ -6,25 +6,25 @@ import { ILogger } from '../../common/interfaces';
 import { Validation } from '../models/validation';
 import { ValidationsManager } from '../models/validationsManager';
 
-interface ValidationParams {
-  flowId: string;
+interface ValidationPayload {
+  path: string;
 }
 
-type GetRequestHandler = RequestHandler<ValidationParams, Validation>;
+type CreateRequestHandler = RequestHandler<undefined, Validation, ValidationPayload>;
 
 @injectable()
 export class ValidationsController {
   public constructor(@inject(Services.LOGGER) private readonly logger: ILogger, private readonly manager: ValidationsManager) {}
 
-  public getValidation: GetRequestHandler = async (req, res, next) => {
+  public post: CreateRequestHandler = async (req, res, next) => {
     try {
-      const { flowId } = req.params;
-      const validation = await this.manager.getValidation(flowId);
+      const { path } = req.body;
+      const validation = await this.manager.validate(path);
       if (!validation) {
-        const error = new Error('Flow with given id was not found.');
+        const error = new Error('Path was not found.');
         return next(error);
       }
-      return res.status(httpStatus.OK).json(validation);
+      return res.status(httpStatus.CREATED).json(validation);
     } catch (error) {
       return next(error);
     }

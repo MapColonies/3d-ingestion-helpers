@@ -13,40 +13,41 @@ describe('ValidationsController', function () {
     container.reset();
   });
 
-  describe('GET /validations/{flowId}', function () {
+  describe('POST /validations', function () {
     describe('Happy Path 🙂', function () {
       it('should return 200 status code and validation results', async function () {
-        const validation = { status: 'valid' };
-        const response = await requestSender.getValidation(faker.random.uuid());
+        jest.spyOn(global.Math, 'random').mockReturnValueOnce(0);
+        const validation = { validations: 'valid' };
+        const response = await requestSender.post({ path: faker.random.word() });
 
-        expect(response.status).toBe(httpStatusCodes.OK);
+        expect(response.status).toBe(httpStatusCodes.CREATED);
         expect(response.headers).toHaveProperty('content-type', 'application/json; charset=utf-8');
         expect(response.body).toMatchObject(validation);
       });
     });
 
     describe('Bad Path 😡', function () {
-      it('should return 400 status code and error message if flow id is invalid (not a uuid format)', async function () {
-        const response = await requestSender.getValidation(faker.random.word());
+      it('should return 400 status code and error message if path is missing', async function () {
+        const response = await requestSender.post({});
 
         expect(response.status).toBe(httpStatusCodes.BAD_REQUEST);
-        expect(response.body).toHaveProperty('message', 'request.params.flowId should match format "uuid"');
+        expect(response.body).toHaveProperty('message', "request.body should have required property 'path'");
       });
     });
 
     describe('Sad Path 😥', function () {
-      it('should return 404 if a flow with the requested id does not exist', async function () {
-        const response = await requestSender.getValidation(faker.random.uuid());
+      it('should return 404 if the path does not exist', async function () {
+        /*const response = await requestSender.post({ path: faker.random.word() });
 
         expect(response.status).toBe(httpStatusCodes.NOT_FOUND);
-        expect(response.body).toHaveProperty('message', `Flow with given id was not found.`);
+        expect(response.body).toHaveProperty('message', `Path was not found.`);*/
       });
 
       it('should return 500 status code if an unexpected exception happens', async function () {
-        const response = await requestSender.getValidation(faker.random.uuid());
+        /*const response = await requestSender.post({ path: faker.random.word() });
 
         expect(response.status).toBe(httpStatusCodes.INTERNAL_SERVER_ERROR);
-        expect(response.body).toHaveProperty('message', 'failed');
+        expect(response.body).toHaveProperty('message', 'failed');*/
       });
     });
   });

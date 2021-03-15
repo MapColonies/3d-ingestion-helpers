@@ -9,17 +9,20 @@ info:
 servers:
   - url: http://localhost:8084
 paths:
-  /validations/{flowId}:
-    get:
-      operationId: getValidation
+  /validations:
+    post:
+      operationId: post
       summary: Get validation results
       tags:
         - validations
-      parameters:
-        - $ref: '#/components/parameters/flowId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/postPayload'
       responses:
-        200:
-          description: OK
+        201:
+          description: Created
           content:
             application/json:
               schema:
@@ -29,16 +32,6 @@ paths:
         '5XX':
           $ref: '#/components/responses/unexpectedError'
 components:
-  parameters:
-    flowId:
-      in: path
-      name: flowId
-      required: true
-      schema:
-        type: string
-        format: uuid
-      description: The flow id
-      example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
   responses:
     badRequest:
       description: Bad Request
@@ -66,10 +59,17 @@ components:
       properties:
         message:
           type: string
+    postPayload:
+      type: object
+      required:
+        - path
+      properties:
+        path:
+          type: string
     validation:
       type: object
       required:
-        - status
+        - validations
       properties:
         status:
           type: string

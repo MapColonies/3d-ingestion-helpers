@@ -7,8 +7,8 @@ import { Validation } from './validation';
 export class ValidationsManager {
   public constructor(@inject(Services.LOGGER) private readonly logger: ILogger) {}
 
-  public async getValidation(flowId: string): Promise<Validation | undefined> {
-    this.logger.log('info', `Get validations for flow id ${flowId}`);
-    return Math.random() < 0.5 ? { status: 'valid' } : { status: 'invalid' };
+  public async validate(path: string): Promise<Validation | undefined> {
+    this.logger.log('info', `Validate 3d model in path: ${path}`);
+    return Math.random() < 0.5 ? { validations: 'valid' } : { validations: 'invalid' };
   }
 }
