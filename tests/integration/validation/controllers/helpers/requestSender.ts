@@ -10,6 +10,6 @@ export function init(): void {
   app = builder.build();
 }
 
-export async function post(body: { path?: unknown }): Promise<supertest.Response> {
+export async function post(body: { modelPath?: unknown }): Promise<supertest.Response> {
   return supertest.agent(app).post('/validations').set('Content-Type', 'application/json').send(body);
 }

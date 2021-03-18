@@ -36,7 +36,7 @@ describe('ValidationsManager', () => {
       await expect(getPromise).rejects.toThrow('Async error');*/
     });
 
-    it('returns undefined if path not found', async () => {
+    it('returns undefined if model path not found', async () => {
       /*const getPromise = validationsManager.validate(faker.random.word());
 
       await expect(getPromise).resolves.toBeUndefined();*/

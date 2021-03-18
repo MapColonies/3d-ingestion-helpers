@@ -62,9 +62,9 @@ components:
     postPayload:
       type: object
       required:
-        - path
+        - modelPath
       properties:
-        path:
+        modelPath:
           type: string
     validation:
       type: object

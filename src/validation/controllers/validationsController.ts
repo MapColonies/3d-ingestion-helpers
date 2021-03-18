@@ -7,7 +7,7 @@ import { Validation } from '../models/validation';
 import { ValidationsManager } from '../models/validationsManager';
 
 interface ValidationPayload {
-  path: string;
+  modelPath: string;
 }
 
 type CreateRequestHandler = RequestHandler<undefined, Validation, ValidationPayload>;
@@ -18,10 +18,10 @@ export class ValidationsController {
 
   public post: CreateRequestHandler = async (req, res, next) => {
     try {
-      const { path } = req.body;
-      const validation = await this.manager.validate(path);
+      const { modelPath } = req.body;
+      const validation = await this.manager.validate(modelPath);
       if (!validation) {
-        const error = new Error('Path was not found.');
+        const error = new Error('Model path was not found.');
         return next(error);
       }
       return res.status(httpStatus.CREATED).json(validation);
